@@ -8,7 +8,7 @@ using System.Net;
 
 namespace SampleWebApp.API.Controllers
 {
-    [Route("sample")]
+    [Route("samples")]
     public class SampleController : Controller
     {
         private ISampleRepository _repository;
