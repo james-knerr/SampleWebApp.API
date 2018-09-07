@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SampleWebApp.API.Models;
 using SampleWebApp.API.ViewModels;
@@ -13,10 +14,12 @@ namespace SampleWebApp.API.Controllers
     {
         private ISampleRepository _repository;
         private ILogger<SampleController> _logger;
-        public SampleController(ISampleRepository repository, ILogger<SampleController> logger)
+        private readonly TelemetryClient _telemetry;
+        public SampleController(ISampleRepository repository, TelemetryClient telemetry, ILogger<SampleController> logger)
         {
             _repository = repository;
             _logger = logger;
+            _telemetry = telemetry;
         }
 
         [HttpGet("")]

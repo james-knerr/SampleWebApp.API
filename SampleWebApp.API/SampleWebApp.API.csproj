@@ -4,10 +4,17 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <UserSecretsId>24eb10d2-dcc3-4f96-b7cb-fcf4d49e555b</UserSecretsId>
     <ApplicationIcon>wwwroot\favicon.ico</ApplicationIcon>
+    <ApplicationInsightsResourceId>/subscriptions/0003e745-5343-423c-865f-1dca6f2dd59e/resourcegroups/SampleResourceGroup/providers/microsoft.insights/components/SampleWebApp-API</ApplicationInsightsResourceId>
+    <ApplicationInsightsAnnotationResourceId>/subscriptions/0003e745-5343-423c-865f-1dca6f2dd59e/resourcegroups/SampleResourceGroup/providers/microsoft.insights/components/SampleWebApp-API</ApplicationInsightsAnnotationResourceId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.5.0-beta1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
   </ItemGroup>
 
 </Project>
