@@ -1,6 +1,7 @@
 ﻿using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SampleWebApp.API.Helpers;
 using SampleWebApp.API.Models;
 using SampleWebApp.API.ViewModels;
 using System;
@@ -25,8 +26,12 @@ namespace SampleWebApp.API.Controllers
         [HttpGet("")]
         public JsonResult GetSamples()
         {
+            Guid analyticsEventGuid = Guid.NewGuid();
+            Dictionary<string, string> analyticsProperties = new Dictionary<string, string>();
+            analyticsProperties.Add("ID", GuidMappings.Map(analyticsEventGuid));
             try
             {
+                _telemetry.TrackEvent("API - GetSamples() - Start", analyticsProperties);
                 ICollection<SampleModel> samples = new List<SampleModel>();
                 samples = _repository.GetSamples();
                 ICollection<SampleViewModel> vms = new List<SampleViewModel>(samples.Count);
@@ -35,6 +40,7 @@ namespace SampleWebApp.API.Controllers
                     vms.Add(sample.ToViewModel());
                 }
                 Response.StatusCode = (int)HttpStatusCode.OK;
+                _telemetry.TrackEvent("API - GetSamples() - End", analyticsProperties);
                 return Json(vms);
 
             }
@@ -42,6 +48,7 @@ namespace SampleWebApp.API.Controllers
             {
                 _logger.LogError("Failed to retrieve samples.", ex);
                 Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                _telemetry.TrackEvent("API - GetSamples() - Exception", analyticsProperties);
                 return Json(new Message(ex));
             }
         }
