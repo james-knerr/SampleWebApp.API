@@ -58,8 +58,14 @@ namespace SampleWebApp.API.Controllers
         [HttpPost("")]
         public JsonResult AddSample([FromBody] SampleViewModel vm)
         {
+            Guid analyticsEventGuid = Guid.NewGuid();
+            Dictionary<string, string> analyticsProperties = new Dictionary<string, string>();
+            analyticsProperties.Add("Source", "API");
+            analyticsProperties.Add("Method", "AddSample()");
+            analyticsProperties.Add("ID", GuidMappings.Map(analyticsEventGuid));
             try
             {
+                _telemetry.TrackEvent("Start", analyticsProperties);
                 if (ModelState.IsValid)
                 {
                     SampleModel newSample = vm.ToModel();
@@ -68,14 +74,17 @@ namespace SampleWebApp.API.Controllers
                     if (_repository.SaveAll(User))
                     {
                         Response.StatusCode = (int)HttpStatusCode.OK;
+                        _telemetry.TrackEvent("End", analyticsProperties);
                         return Json(newVm);
                     }
                     Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    _telemetry.TrackEvent("Exception", analyticsProperties);
                     return Json(new Message(MessageType.Error, "Unable to save new sample"));
                 }
                 else
                 {
                     Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    _telemetry.TrackEvent("Exception", analyticsProperties);
                     return Json(new Message(ModelState));
                 }
             }
