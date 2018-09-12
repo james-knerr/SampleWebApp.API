@@ -15,12 +15,13 @@ namespace SampleWebApp.API.Controllers
     {
         private ISampleRepository _repository;
         private ILogger<SampleController> _logger;
-        private readonly TelemetryClient _telemetry;
+        private TelemetryClient _telemetry;
         public SampleController(ISampleRepository repository, TelemetryClient telemetry, ILogger<SampleController> logger)
         {
             _repository = repository;
             _logger = logger;
             _telemetry = telemetry;
+            _telemetry.InstrumentationKey = Startup.Configuration["ApplicationInsights:InstrumentationKey"];
         }
 
         [HttpGet("")]
